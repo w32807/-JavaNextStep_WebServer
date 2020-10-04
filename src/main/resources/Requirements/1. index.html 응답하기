@@ -1,0 +1,3 @@
+1. get 방식으로 index.html로 연결하자. (localhost:8080/index.html 로 요청을 받았을 경우)
+2. 즉 큰 그림은, 요청을 InputStream으로 읽어, index.html을 OutputStream으로 보내주면 된다.
+3. InputStream을 한 줄 단위로 읽기 위해 BufferedReader를 생성하여 readLine() 사용.
