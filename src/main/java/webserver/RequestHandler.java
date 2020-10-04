@@ -2,11 +2,15 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.file.Files;
+
+import javax.annotation.processing.FilerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +19,7 @@ public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private String url;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;     // 생성자로써, 매개변수로 받은 소켓을 connection에 넣어줌
@@ -26,10 +31,10 @@ public class RequestHandler extends Thread {
         // 서버와 클라인언트에서 사용될 InputStream, OutputStream 선언.
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()){ // try에서 두 개 이상의 조건을 쓸 수 있다. (세미콜론으로 구분)
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다. (복잡도가 증가하면 리팩토링 ㄱㄱ)
-            indexHtml(in,out);
-            
+            url = "./webapp" + getUrl(in,out);
             DataOutputStream dos = new DataOutputStream(out); //선언한 outputStream을 이용하여 자바의 기본 자료형을 byte 단위로 출력하는 DataOutputStream을 선언한다.
-            byte[] body = "Hello World".getBytes(); // 문자열을 byte로 변환하여 배열에 저장
+            //byte[] body = "Hello World".getBytes(); // 문자열을 byte로 변환하여 배열에 저장
+            byte[] body = getFileBytes(url);
             response200Header(dos, body.length);    
             responseBody(dos, body);
         } catch (IOException e) {
@@ -57,18 +62,28 @@ public class RequestHandler extends Thread {
         }
     }
     
-    private void indexHtml(InputStream in , OutputStream out) throws IOException{
+    // get 방식으로 url얻기
+    public String getUrl(InputStream in , OutputStream out) throws IOException{
         String line="";
         String str = "";
+        String[] inputArr; 
         BufferedReader bf = new BufferedReader(new InputStreamReader(in));
-        
+
         while ((line = bf.readLine()) != null) {
-            str += line;
-            log.debug("inputStream의 결과 : " + line);
-            
             if(line == null || line.equals("")) {
-                return;
+                break;
             }
+            str += line;
         }
+        
+        inputArr = str.split(" ");
+        
+        return inputArr[1];
+    }
+    
+    // url을 입력받아 해당 파일을 bytes로 변환
+    private byte[] getFileBytes(String url) throws IOException {
+        
+        return Files.readAllBytes(new File(url).toPath());
     }
 }

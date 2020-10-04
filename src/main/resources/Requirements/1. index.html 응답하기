@@ -1,3 +1,12 @@
+
+요구사항
 1. get 방식으로 index.html로 연결하자. (localhost:8080/index.html 로 요청을 받았을 경우)
 2. 즉 큰 그림은, 요청을 InputStream으로 읽어, index.html을 OutputStream으로 보내주면 된다.
 3. InputStream을 한 줄 단위로 읽기 위해 BufferedReader를 생성하여 readLine() 사용.
+
+
+정리
+
+1. RequestHandler는 Thread를 상속받는 클래스로써, WebServer클래스에서 소켓 클래스를 이용하여 멀티 스레드를 구현할 수 있다.
+2. 서버와 클라이언트는 소켓을 통해 통신을 하며, 통신 시 데이터는 inputStream, outputStream을 이용하여 통신한다.
+3. inputStream에서  BufferedReader를 이용하여 원하는 정보를 가져와, 보내고자 하는 데이터를 byte로 변환 후 DataOutputStream을 이용하여 클라이언트로 보낸다.  
