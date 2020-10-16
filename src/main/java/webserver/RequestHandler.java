@@ -55,7 +55,7 @@ public class RequestHandler extends Thread {
 
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
-            dos.write(body, 0, body.length); // write(byte buf[], int index, int size) buf의 주어진 index에서 size 만큼 출력한다.
+            dos.write(body, 0, body.length); // write(byte buf[], int index, int size) buf의 주어진 index부터 size 만큼 출력한다.
             dos.flush();
         } catch (IOException e) {
             log.error(e.getMessage());
