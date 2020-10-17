@@ -9,5 +9,5 @@
 현재상황
 
 1. index.hmtl에서 <a>로 user/form.html 로 넘어간다 (이 때 URL을 받아옴)
-2. 그러면 form.html을 파일로 만들어서 reponse에 넣어주고 보냄
+2. 그러면 form.html을 파일로 만들어서 response에 넣어주고 보냄
 3. 값을 입력받고 회원가입 버튼을 누르면 submit으로 서버에 데이터가 들어오고, model에 저장하자.

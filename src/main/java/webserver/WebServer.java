@@ -27,7 +27,7 @@ public class WebServer {
             
             Socket connection;  // accept는 새롭게 연결 된 소켓을 반환한다.
             // 여기서 클라이언트의 요청이 있을 때 까지 대기 (ServerSocket 클래스에 내장되어 있음) 
-            // 요청이 발생하면 클라이언트와 서버를 연결하는 socket을 requestHandler에 전달하며 새로운 스레드를 실행하는 방식으로 멀티스레드 프로그래밍을 구현.
+            // 요청이 발생하면 클라이언s트와 서버를 연결하는 socket을 requestHandler에 전달하며 새로운 스레드를 실행하는 방식으로 멀티스레드 프로그래밍을 구현.
             // RequestHandler는 Thread를 상속하고 있으며 사용자의 요청에 대한 처리와 응답에 대한 처리를 담당하는 가장 중심이 되는 클래스이다.
             while ((connection = listenSocket.accept()) != null) {
                 RequestHandler requestHandler = new RequestHandler(connection); // 서버와 연결된 소켓이 생성되면 RequestHandler 인스턴스 생성

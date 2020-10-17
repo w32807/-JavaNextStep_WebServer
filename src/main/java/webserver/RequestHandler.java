@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 
 import javax.annotation.processing.FilerException;
 
@@ -31,14 +32,13 @@ public class RequestHandler extends Thread {
         // 서버와 클라인언트에서 사용될 InputStream, OutputStream 선언.
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()){ // try에서 두 개 이상의 조건을 쓸 수 있다. (세미콜론으로 구분)
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다. (복잡도가 증가하면 리팩토링 ㄱㄱ)
-            url = "./webapp" + getUrl(in,out);
-            DataOutputStream dos = new DataOutputStream(out); //선언한 outputStream을 이용하여 자바의 기본 자료형을 byte 단위로 출력하는 DataOutputStream을 선언한다.
-            //byte[] body = "Hello World".getBytes(); // 문자열을 byte로 변환하여 배열에 저장
-            byte[] body = getFileBytes(url);
-            response200Header(dos, body.length);    
-            responseBody(dos, body);
-        } catch (IOException e) {
-        	noneHtmlProcess(url);
+            url = getUrl(in,out);
+            moveToHtml(url, out);
+
+        }catch (InvalidPathException p) {
+            noneHtmlProcess(url);
+        }
+        catch (IOException e) {
             log.error(e.getMessage());
         }
     }
@@ -46,7 +46,7 @@ public class RequestHandler extends Thread {
 	private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n"); // HTTP/1.1가 표준, 200 OK는 성공 시 응답상태 코드. 
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type:text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
@@ -63,24 +63,40 @@ public class RequestHandler extends Thread {
         }
     }
     
+    public void moveToHtml(String url, OutputStream out) throws IOException {
+        String htmlUrl = "./webapp" + getHtmlPath(url);
+        DataOutputStream dos = new DataOutputStream(out); //선언한 outputStream을 이용하여 자바의 기본 자료형을 byte 단위로 출력하는 DataOutputStream을 선언한다.
+            byte[] body; //byte[] body = "Hello World".getBytes(); // 문자열을 byte로 변환하여 배열에 저장
+            
+            body = getFileBytes(htmlUrl);
+            response200Header(dos, body.length);    
+            responseBody(dos, body);
+    }
+    
     // get 방식으로 url얻기
     public String getUrl(InputStream in , OutputStream out) throws IOException{
         String line="";
-        String str = "";
-        String[] urlDataArr; 
+        String url = "";
         BufferedReader bf = new BufferedReader(new InputStreamReader(in));
 
         while ((line = bf.readLine()) != null) {
             if(line == null || line.equals("")) {
                 break;
             }
-            str += line;
+            url += line;
+            
         }
+        log.debug("헤더 : " + url);
+        return url;
+    }
+    
+    public String getHtmlPath(String url) {
+        String[] urlDataArr; 
+        urlDataArr = url.split(" ");
         
-        urlDataArr = str.split(" ");
-        log.debug("get방식 입력받은 데이터 : " + urlDataArr[1]);
         return urlDataArr[1];
     }
+    
     
     // url을 입력받아 해당 파일을 bytes로 변환
     private byte[] getFileBytes(String url) throws IOException {
@@ -94,7 +110,8 @@ public class RequestHandler extends Thread {
 
     public void noneHtmlProcess(String url) {
     	// html이 없으면 catch문을 타고 이 메소드 실행
-    	String[] urlDataArr;
-    	urlDataArr = url.split("/");
+        SignIn signInUser = new SignIn(url);
+        signInUser.signIn();
 	}
 }
+
