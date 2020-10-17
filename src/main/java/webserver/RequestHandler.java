@@ -38,11 +38,12 @@ public class RequestHandler extends Thread {
             response200Header(dos, body.length);    
             responseBody(dos, body);
         } catch (IOException e) {
+        	noneHtmlProcess(url);
             log.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+	private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n"); // HTTP/1.1가 표준, 200 OK는 성공 시 응답상태 코드. 
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
@@ -66,7 +67,7 @@ public class RequestHandler extends Thread {
     public String getUrl(InputStream in , OutputStream out) throws IOException{
         String line="";
         String str = "";
-        String[] inputArr; 
+        String[] urlDataArr; 
         BufferedReader bf = new BufferedReader(new InputStreamReader(in));
 
         while ((line = bf.readLine()) != null) {
@@ -76,9 +77,9 @@ public class RequestHandler extends Thread {
             str += line;
         }
         
-        inputArr = str.split(" ");
-        
-        return inputArr[1];
+        urlDataArr = str.split(" ");
+        log.debug("get방식 입력받은 데이터 : " + urlDataArr[1]);
+        return urlDataArr[1];
     }
     
     // url을 입력받아 해당 파일을 bytes로 변환
@@ -86,4 +87,14 @@ public class RequestHandler extends Thread {
         
         return Files.readAllBytes(new File(url).toPath());
     }
+    
+    private void getUserFromGet() {
+		
+	}
+
+    public void noneHtmlProcess(String url) {
+    	// html이 없으면 catch문을 타고 이 메소드 실행
+    	String[] urlDataArr;
+    	urlDataArr = url.split("/");
+	}
 }
