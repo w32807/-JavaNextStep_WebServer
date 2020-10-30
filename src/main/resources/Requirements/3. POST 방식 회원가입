@@ -1,0 +1,16 @@
+
+요구사항
+
+1. index.html에서 회원가입 버튼을 눌러 form.html로 이동
+2. 입력 받은 값을 model.User 클래스에 저장
+
+
+BufferedReader 와  readline.
+
+1. BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8")); 로 선언한 br은 다른 곳에서도 사용 가능
+1-1. readline으로 읽어도, 버퍼가 비워지는 것은 아님.
+
+2. 그런데 전체를 readline으로 읽고 나서 같은 버퍼를 다시 readline하면 오류 -> readline 하면 그대로 낙장 불입. 포인터가 옮겨가는 듯??? 다시 첫번째 포인터가 아닌 그냥 끝난다.
+3. 그러므로 br의 데이터를 읽을 때는 한번에 처리해야 함. 
+
+
