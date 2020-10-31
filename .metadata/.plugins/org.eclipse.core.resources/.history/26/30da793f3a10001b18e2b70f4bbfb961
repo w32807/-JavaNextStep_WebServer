@@ -1,0 +1,4 @@
+
+요구사항 
+1. index.html 페이지에서 회원가입 메뉴를 클릭하면 form.html로 이동하면서 회원가입을 할 수 있다.
+2. html 과 URL을 벼교하여 사용자가 입력한 값을 parsing 후 model.User클래스에 저장한다.

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move &apos;Remote_Server_Connection&apos; to &apos;Requirements&apos;" description="Move &apos;Remote_Server_Connection&apos; to &apos;Requirements&apos;" destination="src/main/resources/Requirements" element1="src/main/resources/Remote_Server_Connection" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1601789942495" updateReferences="true"/>
+</session>

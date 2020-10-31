@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.jdt.debug.ui.MAIN_METHOD_SELECTION_DIALOG">
+		<item key="ShowStatusLine" value="true"/>
+		<item key="History" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History&gt;&#x0D;&#x0A;&lt;historyRootNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=String_Cal/src&amp;lt;com.stringCalculator{Calculator.java[Calculator&lt;/infoNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=Web_Server/C:\/Users\/w3280\/.m2\/repository\/ch\/qos\/logback\/logback-classic\/1.1.2\/logback-classic-1.1.2.jar=/maven.pomderived=/true=/=/maven.pomderived=/true=/=/maven.groupId=/ch.qos.logback=/=/maven.artifactId=/logback-classic=/=/maven.version=/1.1.2=/=/maven.scope=/compile=/&amp;lt;ch.qos.logback.classic.net(JMSQueueSink.class[JMSQueueSink&lt;/infoNode&gt;&#x0D;&#x0A;&lt;infoNode&gt;=Web_Server/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&amp;lt;webserver{WebServer.java[WebServer&lt;/infoNode&gt;&#x0D;&#x0A;&lt;/historyRootNode&gt;&#x0D;&#x0A;&lt;/History&gt;"/>
+		<section name="DialogBoundsSettings">
+			<item key="DIALOG_HEIGHT" value="500"/>
+			<item key="DIALOG_WIDTH" value="600"/>
+			<item key="DIALOG_X_ORIGIN" value="188"/>
+			<item key="DIALOG_Y_ORIGIN" value="186"/>
+			<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+		</section>
+	</section>
+	<section name="expressionHistory">
+	</section>
+	<section name="org.eclipse.jdt.internal.debug.ui.ExpressionInformationControlCreator$ExpressionInformationControl">
+		<item key="WIDTH" value="787"/>
+		<item key="HEIGHT" value="679"/>
+		<item key="SashWeightTree" value="200"/>
+		<item key="SashWeightDetails" value="200"/>
+	</section>
+</section>

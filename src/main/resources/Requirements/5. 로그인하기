@@ -1,0 +1,20 @@
+
+요구사항
+
+1. 먼저 앞서 구현한 회원가입 기능에서, 회원가입을 하면 DataBase.addUser() 메소드를 이용하여 사용자 정보를 저장.
+2. index.html에서 로그인 메뉴를 클릭하면 login.html로 이동하여 로그인한다
+3. 성공시 index.html로 이동하고, 실패하면 /user/login_failed.html로 이동한다
+4. 로그인이 성공할 경우 요청헤더의 Cookie 헤더값이 logined=true, 실패하면 logined=false로 전달.
+
+
+
+
+
+1. 로그인하면 POST method를 통해 "/user/login" 로 이동한다.
+2. RequesetHandler에서 "/user/login"에서 입력받은 아이디와 비밀번호를 가져온다
+3. findUserById를 통해 user정보를 찾아오고 user.getPassword 로 비밀번호를 비교 (user가 null이거나 비밀번호가 틀리면 loginFaild로 이동)
+4. 이 떄의 분기를 통해 Cookie 헤더 값 입력 (header에 Set-Cookie=true 를 통해 로그인 유지할 수 있음)
+4-1) 이러면 다음 요청떄부터 Cookie의 값이 body에 담기며, login유무를 판단할 수 있다. (그런데 ID, PWD는 세션에 저장해야 다른곳에서도 활용 가능)
+
+문제. HTML은 바뀌는데 URI가 바뀌지 않아서 그 다음 페이지 이동에 문제가 생김.
+1. 자동으로 /user/

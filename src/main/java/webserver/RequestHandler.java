@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.util.Map;
 
 import javax.annotation.processing.FilerException;
 
@@ -17,13 +18,13 @@ import org.mockito.internal.util.io.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import util.HttpRequestUtils;
 import util.IOUtils;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private String url;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;     // 생성자로써, 매개변수로 받은 소켓을 connection에 넣어줌
@@ -54,19 +55,24 @@ public class RequestHandler extends Thread {
             }
             
             String request = getRequest(url);
-            
+            String body = IOUtils.readData(br, contentLength);
+            log.debug("BODY : " + body);
+            Map<String, String> postDataMap = HttpRequestUtils.parseQueryString(body);
+        	LoginHandler loginHandler = new LoginHandler();
+        	boolean loginAt = loginHandler.userLogin(postDataMap);
             if(request.equals("/user/create")){
                 // 회원가입
-                String body = IOUtils.readData(br, contentLength); 
-                log.debug("BODY : " + body);
                 SignIn signIn = new SignIn();
-                signIn.saveMemberData(body);
-            }else {
-                // html 이동
-                moveToHtml(request,out);
-            }
-            
-
+                signIn.saveMemberData(postDataMap);
+            }else if(request.equals("/user/login")) {
+            	if(loginAt) {
+            		request = "/index.html";
+            	}else {
+            		request = "/user/login_failed.html";
+				}
+			}
+            // html 이동
+            moveToHtml(request,out,String.valueOf(loginAt));
         } 
         catch (IOException e) {
             log.error(e.getMessage());
@@ -83,11 +89,24 @@ public class RequestHandler extends Thread {
         return Integer.parseInt(tokens[1].trim());
     }
 
-	private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+	private void response200Header(DataOutputStream dos, int lengthOfBodyContent, String logined) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n"); // HTTP/1.1가 표준, 200 OK는 성공 시 응답상태 코드. 
             dos.writeBytes("Content-Type:text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("Set-Cookie: " + logined + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+	
+	private void response302Header(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");  
+            dos.writeBytes("Content-Type:text/html;charset=utf-8\r\n");
+            dos.writeBytes("Location: /index.html");
+            //dos.writeBytes("Location: http://www.google.com");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -106,14 +125,18 @@ public class RequestHandler extends Thread {
     
     
     
-    public void moveToHtml(String request, OutputStream out) throws IOException {
+    public void moveToHtml(String request, OutputStream out, String logined) throws IOException {
         String htmlUrl = "./webapp" + request;
         DataOutputStream dos = new DataOutputStream(out); //선언한 outputStream을 이용하여 자바의 기본 자료형을 byte 단위로 출력하는 DataOutputStream을 선언한다.
             byte[] body; //byte[] body = "Hello World".getBytes(); // 문자열을 byte로 변환하여 배열에 저장
-            
-            body = getFileBytes(htmlUrl);
-            response200Header(dos, body.length);    
-            responseBody(dos, body);
+            log.debug("moveToHtml request : " + request );
+            if(request.equals("/user/create")) {
+            	response302Header(dos);
+            }else {
+            	body = getFileBytes(htmlUrl);
+            	response200Header(dos, body.length, logined);    
+            	responseBody(dos, body);
+			}
     }
     
     // get 방식으로 url얻기
