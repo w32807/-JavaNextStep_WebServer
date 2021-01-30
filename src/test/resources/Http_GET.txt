@@ -1,0 +1,5 @@
+GET /user/create?userId=javajig&password=password&name=Wonjun HTTP/1.1
+HOST: localhost:8080
+Connection: keep-alive
+Accept: */*
+
